@@ -1,0 +1,11 @@
+# Visual Studio/Rider files
+.vs/
+.idea/
+*.suo
+*.user
+*.pdb
+*.obj
+
+# Binaries and intermediate files
+[Bb]in/
+[Oo]bj/
