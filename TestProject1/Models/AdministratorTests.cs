@@ -37,10 +37,10 @@ public class AdministratorTests
     {
         // pripremimo ulaz koji vodi do repo.Sacuvaj()
         string input =
-            "NoviFilm\n" +   // Naziv
-            "Akcija\n" +     // Kategorija
-            "8\n" +          // Ocjena
-            "2020\n";        // Godina
+            "NoviFilm" + Environment.NewLine +   // Naziv
+            "Akcija" + Environment.NewLine +     // Kategorija
+            "8" + Environment.NewLine +          // Ocjena
+            "2020" + Environment.NewLine;        // Godina
 
         Console.SetIn(new StringReader(input));
 
@@ -50,23 +50,27 @@ public class AdministratorTests
         // Assert
         mockRepo.Verify(r => r.Sacuvaj(), Times.Once);
     }
-
     [TestMethod]
-    public void ObrisiFilm_PozivaRepoSacuvaj()
+    public void ObrisiFilm_PozivaRepoSacuvaj_SaOcjenama()
     {
-        // Repozitorij sa jednim filmom
-        var list = new List<Film> { new Film("Avatar", "Sci-Fi", 8, 2009) };
+        // Pripremamo film sa ocjenama da forsiramo dvostruku potvrdu
+        var filmSaOcjenom = new Film("Avatar", "Sci-Fi", 8, 2009);
+        filmSaOcjenom.DodajOcjenu(10); // Dodajemo ocjenu, sada getOcjene().Count > 0
+        var list = new List<Film> { filmSaOcjenom };
         mockRepo.Setup(r => r.GetAll()).Returns(list);
 
+        // KORISTITE Environment.NewLine za ispravan rad Console.ReadLine()
         string input =
-            "Avatar\n" +   // naziv
-            "d\n" +        // potvrda
-            "OBRISI\n";    // finalna potvrda
+            "Avatar" + Environment.NewLine +  // 1. Naziv filma
+            "d" + Environment.NewLine +        // 2. Opšta potvrda (d)
+            "OBRISI" + Environment.NewLine;    // 3. Finalna potvrda (OBRISI)
 
         Console.SetIn(new StringReader(input));
 
+        // Act
         admin.obrisiFilm(filmService);
 
+        // Assert: Sada bi Sacuvaj trebao biti pozvan jednom
         mockRepo.Verify(r => r.Sacuvaj(), Times.Once);
     }
 
